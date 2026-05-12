@@ -24,5 +24,15 @@ for msg in st.session_state.mensajes:
     with st.chat_message(role):
         st.markdown(msg.content)
 
+# Cuadro de entrada de texto de usuario 
 
+pregunta = st.chat_input("Escribe tu mensaje: ")
+
+if pregunta:
+    # Mostrar inmediatamente el mensaje del usuario en la interfaz 
+    with st.chat_message("user"):
+        st.markdown(pregunta)
+
+    # Almacenamos el mensaje en la memoria de streamlit 
+    st.session_state.mensajes.append(HumanMessage(content=pregunta))
 
