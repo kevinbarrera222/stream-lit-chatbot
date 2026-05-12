@@ -9,9 +9,10 @@ st.markdown("Este es un *chatbot de ejemplo* construido con Langchain + Streamli
 
 chat_model = ChatOpenAI(model="gpt-4o-mini", temperature=5.0)
 
-# Inicializar el historial de mensajes 
+# Inicializar el historial de mensajes
 if "mensajes" not in st.session_state:
-    st.session_state.mensajes []
+    st.session_state.mensajes = []
+
 
 # Mostrar mensajes previos en la interfaz 
 for msg in st.session_state.mensajes:
@@ -36,12 +37,12 @@ if pregunta:
     # Almacenamos el mensaje en la memoria de streamlit 
     st.session_state.mensajes.append(HumanMessage(content=pregunta))
 
-# Generar respuesta usando el modelo de lenguaje 
-respuesta = chat_model.invoke(st.session_state.mesajes)
+    # Generar respuesta usando el modelo de lenguaje 
+    respuesta = chat_model.invoke(st.session_state.mesajes)
 
-# Mostrar la respuesta en la interfaz 
+    # Mostrar la respuesta en la interfaz 
 
-with st.chat_message("assistant"):
-    st.markdown(respuesta.content)
+    with st.chat_message("assistant"):
+        st.markdown(respuesta.content)
 
-st.session_state.mensajes.append(respuesta)
+    st.session_state.mensajes.append(respuesta)
