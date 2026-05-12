@@ -7,7 +7,8 @@ st.set_page_config(page_title="Chatbot Básico", page_icon="🤖")
 st.title("🤖Chatbot Básico con Lanchaing")
 st.markdown("Este es un *chatbot de ejemplo* construido con Langchain + Streamlit. ¡Escribe tu mensaje abajo para comenzar!")
 
-chat_model = ChatOpenAI(model="gpt-4o-mini", temperature=5.0)
+chat_model = ChatOpenAI(model="gpt-4o-mini", temperature=0.7)
+
 
 # Inicializar el historial de mensajes
 if "mensajes" not in st.session_state:
@@ -38,7 +39,7 @@ if pregunta:
     st.session_state.mensajes.append(HumanMessage(content=pregunta))
 
     # Generar respuesta usando el modelo de lenguaje 
-    respuesta = chat_model.invoke(st.session_state.mesajes)
+    respuesta = chat_model.invoke(st.session_state.mensajes)
 
     # Mostrar la respuesta en la interfaz 
 
