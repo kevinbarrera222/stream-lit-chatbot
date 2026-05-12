@@ -51,6 +51,7 @@ for msg in st.session_state.mensajes:
 if st.button("🗑️Nueva conversación"):
     st.session_state.mensajes = []
     st.rerun()
+ 
 
 # Cuadro de entrada de texto de usuario 
 
@@ -61,8 +62,30 @@ if pregunta:
     with st.chat_message("user"):
         st.markdown(pregunta)
 
-    # Almacenamos el mensaje en la memoria de streamlit 
-    st.session_state.mensajes.append(HumanMessage(content=pregunta))
+    # Generar y mostrar respuesta del asistente 
+    try: 
+        with st.chat_message("assistant"):
+            response_placeholder = st.empty()
+            full_response = ""
+
+            # Streaming de la respuesta 
+            for chunk in cadena.stream({"mensaje": pregunta, "historial": st.session_state.mensajes}):
+                full_response += chunk.content 
+                response_placeholder.markdown(full_response + " ")
+
+            response_placeholder.markdown(full_response)
+
+
+
+        # Almacenamos el mensaje en la memoria de streamlit 
+        st.session_state.mensajes.append(HumanMessage(content=pregunta))
+        st.session_state.mensajes.append(AIMessage(content=full_response))
+
+    except Exception as e:
+        st.error(F"Error al generar respuesta: {str(e)}")
+        st.info("Verifica que tu API de Key OpenAI esté configurada correctamente.")
+        
+
 
     # Generar respuesta usando el modelo de lenguaje 
     respuesta = chat_model.invoke(st.session_state.mensajes)
