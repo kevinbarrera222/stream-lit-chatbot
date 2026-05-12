@@ -7,6 +7,22 @@ st.set_page_config(page_title="Chatbot Básico", page_icon="🤖")
 st.title("🤖Chatbot Básico con Lanchaing")
 st.markdown("Este es un *chatbot de ejemplo* construido con Langchain + Streamlit. ¡Escribe tu mensaje abajo para comenzar!")
 
-chat_model = ChatOpenAI(model="gpt-4o-mini", temperature=0.5)
+chat_model = ChatOpenAI(model="gpt-4o-mini", temperature=5.0)
+
+# Inicializar el historial de mensajes 
+if "mensajes" not in st.session_state:
+    st.session_state.mensajes []
+
+# Mostrar mensajes previos en la interfaz 
+for msg in st.session_state.mensajes:
+    if isinstance(msg, SystemMessage):
+        #No muestro el mensaje por pantalla 
+        continue
+    
+    role = "asistant" if isinstance(msg, AIMessage) else "user"
+
+    with st.chat_message(role):
+        st.markdown(msg.content)
+
 
 
