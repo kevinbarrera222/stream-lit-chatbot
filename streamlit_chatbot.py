@@ -87,12 +87,3 @@ if pregunta:
         
 
 
-    # Generar respuesta usando el modelo de lenguaje 
-    respuesta = chat_model.invoke(st.session_state.mensajes)
-
-    # Mostrar la respuesta en la interfaz 
-
-    with st.chat_message("assistant"):
-        st.markdown(respuesta.content)
-
-    st.session_state.mensajes.append(respuesta)
