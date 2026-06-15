@@ -1,89 +1,104 @@
+import streamlit as st
 from langchain_openai import ChatOpenAI
 from langchain.schema import AIMessage, HumanMessage, SystemMessage
-import streamlit as st
-from langchain.prompts import PromptTemplate 
-
-#Configurar la pagina de la app 
+from langchain.prompts import ChatPromptTemplate
+ 
+# Configuración inicial
 st.set_page_config(page_title="Chatbot Básico", page_icon="🤖")
-st.title("🤖Chatbot Básico con Lanchaing")
-st.markdown("Este es un *chatbot de ejemplo* construido con Langchain + Streamlit. ¡Escribe tu mensaje abajo para comenzar!")
-
+st.title("🤖 Chatbot Básico con LangChain")
+st.markdown("Este es un *chatbot de ejemplo* construido con LangChain + Streamlit. ¡Escribe tu mensaje abajo para comenzar!")
+ 
 with st.sidebar:
     st.header("Configuración")
-    temperature = st.slider("Temperatura",0.0, 1.0, 0.5, 0.1)
-    model_name = st.selectbox("Modelo",["gtp-3.5-turbo","gtp-4","gpt-40-mini"])
-
-    # Recrea el modelo con nuevos parametros
-chat_model = ChatOpenAI(model="gpt-4o-mini", temperature=0.7)
-
-
-# Inicializar el historial de mensajes
+    temperature = st.slider("Temperatura", 0.0, 1.0, 0.5, 0.1)
+    model_name = st.selectbox("Modelo", ["gpt-3.5-turbo", "gpt-4", "gpt-4o-mini"])
+    
+    # PUNTO 4: Personalidad configurable
+    personalidad = st.selectbox(
+        "Personalidad del Asistente",
+        [
+            "Útil y amigable",
+            "Profesional y formal", 
+            "Casual y relajado",
+            "Experto técnico",
+            "Creativo y divertido"
+        ]
+    )
+    
+    # Recrear el modelo con nuevos parámetros
+    chat_model = ChatOpenAI(model=model_name, temperature=temperature)
+    
+    # Definir mensajes del sistema según personalidad
+    system_messages = {
+        "Útil y amigable": "Eres un asistente útil y amigable llamado ChatBot Pro. Responde de manera clara y concisa.",
+        "Profesional y formal": "Eres un asistente profesional y formal. Proporciona respuestas precisas y bien estructuradas.",
+        "Casual y relajado": "Eres un asistente casual y relajado. Habla de forma natural y amigable, como un buen amigo.",
+        "Experto técnico": "Eres un asistente experto técnico. Proporciona respuestas detalladas con precisión técnica.",
+        "Creativo y divertido": "Eres un asistente creativo y divertido. Usa analogías, ejemplos creativos y mantén un tono alegre."
+    }
+    
+    # NUEVO: ChatPromptTemplate con personalidad dinámica
+    chat_prompt = ChatPromptTemplate.from_messages([
+        ("system", system_messages[personalidad]),
+        ("human", "Historial de conversación:\n{historial}\n\nPregunta actual: {mensaje}")
+    ])
+    
+    # Crear cadena usando LCEL
+    cadena = chat_prompt | chat_model
+ 
+# Inicializar el historial de mensajes en session_state
 if "mensajes" not in st.session_state:
     st.session_state.mensajes = []
-
-
- #crear el template de prompt con comportamiento especifico
-
-Prompt_template = PromptTemplate(
-    input_variables=["mensaje","historial"],
-    template="""Eres un asistente util y amigable llamdo Chatbot Pro.
-
-Historial de conversación:
-{historial}
-Responde de manera clara y concisa a la siguiente pregunta: {mensaje}"""
-)
-
-# Crear cadena usando LCEL (Langchain Expression Language)
-cadena = Prompt_template | chat_model
-
-
-# Mostrar mensajes previos en la interfaz 
+ 
+# Renderizar historial existente
 for msg in st.session_state.mensajes:
     if isinstance(msg, SystemMessage):
-        #No muestro el mensaje por pantalla 
-        continue
+        continue  # no mostrar mensajes del sistema al usuario
     
-    role = "asistant" if isinstance(msg, AIMessage) else "user"
-
+    role = "assistant" if isinstance(msg, AIMessage) else "user"
     with st.chat_message(role):
         st.markdown(msg.content)
-
-if st.button("🗑️Nueva conversación"):
+ 
+if st.button("🗑️ Nueva conversación"):
     st.session_state.mensajes = []
     st.rerun()
  
-
-# Cuadro de entrada de texto de usuario 
-
-pregunta = st.chat_input("Escribe tu mensaje: ")
-
+# Input de usuario
+pregunta = st.chat_input("Escribe tu mensaje:")
+ 
 if pregunta:
-    # Mostrar inmediatamente el mensaje del usuario en la interfaz 
+    # Mostrar y almacenar mensaje del usuario
     with st.chat_message("user"):
         st.markdown(pregunta)
-
-    # Generar y mostrar respuesta del asistente 
-    try: 
+    
+    # Preparar historial como texto
+    historial_texto = ""
+    for msg in st.session_state.mensajes[-10:]:  # Últimos 10 mensajes
+        if isinstance(msg, HumanMessage):
+            historial_texto += f"Usuario: {msg.content}\n"
+        elif isinstance(msg, AIMessage):
+            historial_texto += f"Asistente: {msg.content}\n"
+    
+    if not historial_texto:
+        historial_texto = "(No hay historial previo)"
+    
+    # Generar y mostrar respuesta del asistente
+    try:
         with st.chat_message("assistant"):
             response_placeholder = st.empty()
             full_response = ""
-
-            # Streaming de la respuesta 
-            for chunk in cadena.stream({"mensaje": pregunta, "historial": st.session_state.mensajes}):
-                full_response += chunk.content 
-                response_placeholder.markdown(full_response + " ")
-
+ 
+            # Streaming de la respuesta con ChatPromptTemplate
+            for chunk in cadena.stream({"mensaje": pregunta, "historial": historial_texto}):
+                full_response += chunk.content
+                response_placeholder.markdown(full_response + "▌")
+            
             response_placeholder.markdown(full_response)
-
-
-
-        # Almacenamos el mensaje en la memoria de streamlit 
+        
+        # Almacenar mensajes en el historial
         st.session_state.mensajes.append(HumanMessage(content=pregunta))
         st.session_state.mensajes.append(AIMessage(content=full_response))
-
-    except Exception as e:
-        st.error(F"Error al generar respuesta: {str(e)}")
-        st.info("Verifica que tu API de Key OpenAI esté configurada correctamente.")
         
-
-
+    except Exception as e:
+        st.error(f"Error al generar respuesta: {str(e)}")
+        st.info("Verifica que tu API Key de OpenAI esté configurada correctamente.")
