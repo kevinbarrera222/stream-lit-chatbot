@@ -1,31 +1,28 @@
-🤖 Chatbot con Streamlit + LangChain Un chatbot moderno construido con Streamlit, LangChain y OpenAI, con soporte para streaming, configuración dinámica, prompt personalizado y manejo de historial.
+## 🤖 Chatbot with Streamlit + LangChain
 
-🚀 Características principales 🔥 Streaming de respuestas en tiempo real
+A modern chatbot built with **Streamlit**, **LangChain**, and **OpenAI**, featuring real‑time streaming, dynamic configuration, custom prompts, and conversation history management.
 
-🎛️ Panel lateral de configuración
+---
 
-Ajuste de temperatura
+## 🚀 Key Features
 
-Selección de modelo
+🔥 **Real‑time response streaming**  
+🎛️ **Configuration sidebar**  
+- Temperature control  
+- Model selection  
 
-🧠 PromptTemplate personalizado para controlar el comportamiento del asistente
+🧠 **Custom PromptTemplate** to define assistant behavior  
+💬 **Persistent conversation history**  
+🔄 **New conversation button**  
+🛡️ **Clear and user‑friendly error handling**  
+🧹 **Clean, modular, and maintainable codebase**
 
-💬 Historial de conversación persistente
+---
 
-🔄 Botón de nueva conversación
+## 🏗️ Technologies Used
 
-🛡️ Manejo de errores con mensajes claros para el usuario
-
-🧹 Código limpio, modular y fácil de mantener
-
-🏗️ Tecnologías utilizadas
-
-Python 3.10+
-
-Streamlit
-
-LangChain
-
-OpenAI API
-
-LCEL (LangChain Expression Language)
+- Python 3.10+  
+- Streamlit  
+- LangChain  
+- OpenAI API  
+- LCEL (LangChain Expression Language)
