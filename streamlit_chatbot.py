@@ -121,6 +121,13 @@ chat_prompt = ChatPromptTemplate.from_messages(
         ("human", "{mensaje}"),
     ]
 )
+if not leer_config("OPENAI_API_KEY"):
+    st.error(
+        "🔑 Falta la API Key de OpenAI. Agrega `OPENAI_API_KEY` en los Secrets de la app "
+        "(en Streamlit Cloud: Manage app → ⋮ → Settings → Secrets) o en `.streamlit/secrets.toml`."
+    )
+    st.stop()
+
 cadena = chat_prompt | crear_modelo(model_name, temperature)
 
 # -----------------------------
