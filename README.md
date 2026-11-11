@@ -6,7 +6,11 @@ Un chatbot hecho con **Streamlit**, **LangChain** y **OpenAI**, con respuestas e
 
 ## 🚀 Funcionalidades
 
-- 🔥 **Respuestas en streaming** (se escriben en tiempo real)
+- 🎨 **Interfaz propia**: tema oscuro con morado, tipografía Inter, logo y avatares (se configura en `.streamlit/config.toml`)
+- 👋 **Pantalla de bienvenida** con preguntas sugeridas para empezar con un clic
+- 👍 **Botones en cada respuesta**: valorar (👍/👎, se registra en los logs), copiar y regenerar la última respuesta
+- 💾 **Descargar la conversación** como archivo Markdown
+- 🔥 **Respuestas en streaming** (se escriben en tiempo real), con indicador de "Pensando…"
 - 🎛️ **Barra lateral de configuración**: modelo, temperatura y personalidad del asistente
 - 🧠 **Historial real de la conversación**: el modelo recibe los últimos 10 mensajes
 - 🛡️ **Límite de mensajes por usuario y por día** + tope global diario (protege tu saldo de OpenAI)
