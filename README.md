@@ -10,6 +10,10 @@ Un chatbot hecho con **Streamlit**, **LangChain** y **OpenAI**, con respuestas e
 - 👋 **Pantalla de bienvenida** con preguntas sugeridas para empezar con un clic
 - 👍 **Botones en cada respuesta**: valorar (👍/👎, se registra en los logs), copiar y regenerar la última respuesta
 - 💾 **Descargar la conversación** como archivo Markdown
+- 🖼️ **Imágenes y PDFs**: adjunta hasta 3 archivos por mensaje desde la caja de texto (imágenes PNG/JPG/WEBP/GIF y PDFs con texto, máx. 10 MB c/u)
+- 🎤 **Mensajes de voz**: graba desde el micrófono de la caja de texto; se transcriben con `gpt-transcribe`
+- 🔊 **Escuchar respuestas**: botón que lee la respuesta en voz alta con la voz del navegador (gratis, no gasta saldo de OpenAI)
+- ⚡ **Modo de respuesta**: Rápido, Equilibrado o Profundo (cuánto "piensa" el modelo antes de responder)
 - 🔥 **Respuestas en streaming** (se escriben en tiempo real), con indicador de "Pensando…"
 - 🎛️ **Barra lateral de configuración**: modelo, temperatura y personalidad del asistente
 - 🧠 **Historial real de la conversación**: el modelo recibe los últimos 10 mensajes
@@ -63,6 +67,10 @@ Se abre en `http://localhost:8501`.
 | `MAX_MENSAJES_POR_USUARIO` | Mensajes que cada usuario puede enviar por día | `20` |
 | `MAX_MENSAJES_GLOBALES_DIA` | Tope diario sumando a todos los usuarios | `300` |
 | `MAX_TOKENS_RESPUESTA` | Largo máximo de cada respuesta | `1000` |
+| `MODELOS` | Modelos que aparecen en el selector (opcional) | `["gpt-6-luna"]` |
+| `MODELO_TRANSCRIPCION` | Modelo para transcribir mensajes de voz (opcional) | `gpt-transcribe` |
+
+**Modelo por defecto:** `gpt-6-luna`, el modelo más económico de OpenAI, que también entiende imágenes. Reemplaza a `gpt-4o-mini`, `gpt-4.1-mini` y `gpt-5-mini`, que OpenAI retira de su API entre diciembre de 2026 y enero de 2027.
 
 **Cómo funciona el límite:** cada usuario se identifica por su dirección IP (o por su sesión si no hay IP disponible). Los contadores se reinician cada día a la medianoche (hora de Colombia) y también cuando la app se reinicia. El tope global es la red de seguridad: aunque alguien cambie de red para saltarse el límite individual, el gasto diario total nunca pasa de ese número de mensajes.
 
@@ -73,7 +81,9 @@ Se abre en `http://localhost:8501`.
 - Python 3.10+
 - Streamlit
 - LangChain (LCEL, `ChatPromptTemplate`, `MessagesPlaceholder`)
-- OpenAI API
+- OpenAI API (GPT-6 Luna para el chat, gpt-transcribe para la voz)
+- pypdf y Pillow (lectura de PDFs e imágenes)
+- Web Speech API del navegador (lectura en voz alta)
 
 ---
 
