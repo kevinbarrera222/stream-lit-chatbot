@@ -1,0 +1,14 @@
+# Secretos: NUNCA subir la API Key
+.streamlit/secrets.toml
+.env
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Datos generados por la versión con memoria + RAG (carpeta app/)
+rag_db/
+memory_db/
+temp.pdf
