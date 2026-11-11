@@ -2,6 +2,10 @@
 
 Un chatbot hecho con **Streamlit**, **LangChain** y **OpenAI** que conversa en tiempo real, **lee imágenes y PDFs**, **entiende mensajes de voz** y **lee sus respuestas en voz alta**. Tiene personalidades configurables y un **límite de mensajes por usuario** para controlar el gasto de la API.
 
+### 👉 [Probar el chatbot en vivo](https://stream-lit-chatbot-nxppwxmprtwxy9gdn6wvvg.streamlit.app/)
+
+[![Abrir en Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://stream-lit-chatbot-nxppwxmprtwxy9gdn6wvvg.streamlit.app/)
+
 ![Pantalla de inicio de ChatBot Pro](docs/captura.png)
 
 ---
