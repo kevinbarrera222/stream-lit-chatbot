@@ -1,6 +1,8 @@
 ## 🤖 Chatbot con Streamlit + LangChain
 
-Un chatbot hecho con **Streamlit**, **LangChain** y **OpenAI**, con respuestas en tiempo real, personalidades configurables, historial de conversación y **límite de mensajes por usuario** para controlar el gasto de la API.
+Un chatbot hecho con **Streamlit**, **LangChain** y **OpenAI** que conversa en tiempo real, **lee imágenes y PDFs**, **entiende mensajes de voz** y **lee sus respuestas en voz alta**. Tiene personalidades configurables y un **límite de mensajes por usuario** para controlar el gasto de la API.
+
+![Pantalla de inicio de ChatBot Pro](docs/captura.png)
 
 ---
 
@@ -15,7 +17,7 @@ Un chatbot hecho con **Streamlit**, **LangChain** y **OpenAI**, con respuestas e
 - 🔊 **Escuchar respuestas**: botón que lee la respuesta en voz alta con la voz del navegador (gratis, no gasta saldo de OpenAI)
 - ⚡ **Modo de respuesta**: Rápido, Equilibrado o Profundo (cuánto "piensa" el modelo antes de responder)
 - 🔥 **Respuestas en streaming** (se escriben en tiempo real), con indicador de "Pensando…"
-- 🎛️ **Barra lateral de configuración**: modelo, temperatura y personalidad del asistente
+- 🎛️ **Barra lateral de configuración**: modelo, modo de respuesta y personalidad del asistente (la temperatura aparece solo con modelos que la admiten)
 - 🧠 **Historial real de la conversación**: el modelo recibe los últimos 10 mensajes
 - 🛡️ **Límite de mensajes por usuario y por día** + tope global diario (protege tu saldo de OpenAI)
 - ✂️ Largo máximo de preguntas y respuestas para controlar costos
@@ -44,7 +46,7 @@ Luego ejecuta:
 streamlit run streamlit_chatbot.py
 ```
 
-Se abre en `http://localhost:8501`.
+Se abre en `http://localhost:8501`. La primera vez que grabes un mensaje de voz, el navegador te pedirá permiso para usar el micrófono (funciona en `localhost` y en cualquier dirección `https`).
 
 > ⚠️ El archivo `secrets.toml` está en `.gitignore`: **nunca** subas tu API Key a GitHub.
 
@@ -73,6 +75,30 @@ Se abre en `http://localhost:8501`.
 **Modelo por defecto:** `gpt-6-luna`, el modelo más económico de OpenAI, que también entiende imágenes. Reemplaza a `gpt-4o-mini`, `gpt-4.1-mini` y `gpt-5-mini`, que OpenAI retira de su API entre diciembre de 2026 y enero de 2027.
 
 **Cómo funciona el límite:** cada usuario se identifica por su dirección IP (o por su sesión si no hay IP disponible). Los contadores se reinician cada día a la medianoche (hora de Colombia) y también cuando la app se reinicia. El tope global es la red de seguridad: aunque alguien cambie de red para saltarse el límite individual, el gasto diario total nunca pasa de ese número de mensajes.
+
+---
+
+## 🎨 Personalizar
+
+- **Nombre del bot:** variable `NOMBRE_BOT` en `streamlit_chatbot.py` (y el texto del logo en `assets/logo.svg`).
+- **Colores y tipografía:** sección `[theme]` de `.streamlit/config.toml`.
+- **Personalidades y preguntas sugeridas:** diccionarios `PERSONALIDADES` y `SUGERENCIAS` en `streamlit_chatbot.py`.
+
+---
+
+## 📁 Estructura del proyecto
+
+```
+streamlit_chatbot.py        # La app: interfaz, chat y conexión con OpenAI
+adjuntos.py                 # Imágenes, PDFs, transcripción de voz y botón "Escuchar"
+limite_mensajes.py          # Límite de mensajes por usuario y tope global diario
+requirements.txt            # Librerías con versiones fijas
+assets/                     # Logo e ícono
+docs/captura.png            # Captura usada en este README
+.streamlit/config.toml      # Tema (colores, tipografía) y opciones de la app
+.streamlit/secrets.toml.example  # Plantilla de configuración (copiar a secrets.toml)
+app/                        # Versión "Pro" en desarrollo (no se usa en el despliegue)
+```
 
 ---
 
